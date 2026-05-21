@@ -5,6 +5,7 @@ import { StatCard, Card, Badge, Spinner } from '../components/ui'
 export default function Dashboard() {
   const [stats, setStats] = useState(null)
   const [ranking, setRanking] = useState([])
+  const [recentGames, setRecentGames] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -13,14 +14,16 @@ export default function Dashboard() {
       gamesApi.list({ limit: 1 }),
       rankingsApi.list({ limit: 1 }),
       rankingsApi.global({ limit: 5 }),
-    ]).then(([p, g, r, rank]) => {
-      setStats({
-        players: p.pagination?.total ?? 0,
-        games:   g.pagination?.total ?? 0,
-        scores:  r.pagination?.total ?? 0,
-      })
-      setRanking(rank.data || [])
-    }).finally(() => setLoading(false))
+      gamesApi.list({ limit: 5, page: 1 }),
+    ]).then(([p, g, r, rank, recent]) => {
+  setStats({
+    players: p.pagination?.total ?? 0,
+    games:   g.pagination?.total ?? 0,
+    scores:  r.pagination?.total ?? 0,
+  })
+  setRanking(rank.data || [])
+  setRecentGames(recent.data || [])
+}).finally(() => setLoading(false))
   }, [])
 
   if (loading) return (
@@ -87,8 +90,8 @@ const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}']
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Card>
-            <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.1em', marginBottom: 12 }}>
-              ACESSO RÁPIDO
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, marginBottom: 12 }}>
+              Acesso Rápido
             </div>
             {[
               { label: 'Cadastrar Jogador', to: '/players', icon: '◈', color: 'var(--accent)' },
@@ -105,23 +108,27 @@ const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}']
               >
                 <span style={{ color: item.color, fontSize: 16 }}>{item.icon}</span>
                 <span style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 13 }}>{item.label}</span>
-                <span style={{ marginLeft: 'auto', color: 'var(--text-muted)' }}>→</span>
               </a>
             ))}
           </Card>
-
-          <Card style={{ background: 'linear-gradient(135deg, #0a1628 0%, #0e1f38 100%)', borderColor: 'var(--border-bright)' }}>
-            <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--accent)', letterSpacing: '0.1em', marginBottom: 8 }}>
-              STATUS DO SISTEMA
-            </div>
-            {[
-              ['API Backend',  'var(--green)', 'online'],
-              ['PostgreSQL',   'var(--green)', 'conectado'],
-              ['Servidor',     'var(--green)', 'localhost:3000'],
-            ].map(([name, color, status]) => (
-              <div key={name} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--border)' }}>
-                <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>{name}</span>
-                <span style={{ fontSize: 12, color, fontFamily: 'var(--font-mono)' }}>● {status}</span>
+          <Card>
+            <p style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, marginBottom: 12}}>Últimos Jogos Adicionados</p>
+            {recentGames.length === 0 ? (
+              <p style={{ fontSize: 13, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Nenhum jogo foi adicionado recentemente</p>
+            ) : recentGames.map((g, i) => (
+              <div key={g.id} style={{
+                display: 'flex', alignItems: 'center', gap: 10, padding: '9px 0',
+                borderBottom: i < recentGames.length - 1 ? '1px solid var(--border)' : 'none',
+              }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 13, letterSpacing: '-0.01em' }} className="truncate">{g.title}</div>
+                  <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{g.genre}</div>
+                </div>
+                <span style={{
+                  fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)',
+                  background: 'var(--bg-base)', border: '1px solid var(--border)',
+                  padding: '2px 7px', borderRadius: 100, whiteSpace: 'nowrap',
+                }}>{g.platform || '—'}</span>
               </div>
             ))}
           </Card>

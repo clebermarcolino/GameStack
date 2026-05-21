@@ -56,7 +56,7 @@ const RankingModel = {
       FROM rankings r
       JOIN players p ON p.id = r.player_id
       JOIN games   g ON g.id = r.game_id
-      ORDER BY r.id ASC
+      ORDER BY r.id DESC
       LIMIT $1 OFFSET $2
     `, [limit, offset]);
     return result.rows;

@@ -15,7 +15,7 @@ const GameModel = {
 
     let text = `SELECT * FROM games`;
     if (conditions.length) text += ` WHERE ` + conditions.join(' AND ');
-    text += ` ORDER BY id ASC LIMIT $${i} OFFSET $${i + 1}`;
+    text += ` ORDER BY id DESC LIMIT $${i} OFFSET $${i + 1}`;
     params.push(limit, offset);
 
     const result = await query(text, params);

@@ -7,10 +7,10 @@ const PlayerModel = {
     if (search) {
       text = `SELECT * FROM players
               WHERE name ILIKE $1 OR username ILIKE $1 OR email ILIKE $1
-              ORDER BY id ASC LIMIT $2 OFFSET $3`;
+              ORDER BY id DESC LIMIT $2 OFFSET $3`;
       params = [`%${search}%`, limit, offset];
     } else {
-      text = `SELECT * FROM players ORDER BY id ASC LIMIT $1 OFFSET $2`;
+      text = `SELECT * FROM players ORDER BY id DESC LIMIT $1 OFFSET $2`;
       params = [limit, offset];
     }
 
