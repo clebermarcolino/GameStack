@@ -37,9 +37,6 @@ const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}']
   return (
     <div style={{ animation: 'fadeIn 0.4s ease' }}>
       <div style={{ marginBottom: 36 }}>
-        <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--accent)', letterSpacing: '0.15em', marginBottom: 8 }}>
-          PAINEL GERAL
-        </div>
         <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 800, letterSpacing: '-0.02em' }}>
           Dashboard
         </h1>

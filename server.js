@@ -47,7 +47,7 @@ app.use(errorHandler);
 async function start() {
   await runMigrations();
   app.listen(PORT, () => {
-    console.log(` GamesVault API rodando em http://localhost:${PORT}`);
+    console.log(`API rodando em http://localhost:${PORT}`);
     console.log(`Endpoints disponíveis:`);
     console.log(`   GET  /api/v1/health`);
     console.log(`   CRUD /api/v1/players`);
