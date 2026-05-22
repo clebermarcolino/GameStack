@@ -5,8 +5,6 @@ export default function Login({}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [logoutSuccess, setLogoutSuccess] = useState(false);
-
   const navigate = useNavigate();
 
   const CREDENTIALS = {
@@ -17,7 +15,6 @@ export default function Login({}) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
-    setLogoutSuccess(false);
 
     if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
       navigate('/dashboard'); 

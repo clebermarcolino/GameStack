@@ -23,20 +23,18 @@ export default function Sidebar() {
       position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 100,
     }}>
       <div style={{ padding: '28px 24px 22px', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{
-            width: 32, height: 32, borderRadius: 8,
-            background: 'var(--accent)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontSize: 14, fontWeight: 700,
-          }}>G</div>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
-              GameStack
-            </div>
-          </div>
-        </div>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#1a3d2b" viewBox="0 0 16 16">
+      <path d="M11.5 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1.2 4.953-.493 3.948a.5.5 0 0 1-.914.188l-1.036-1.619-1.342 1.43a.5.5 0 0 1-.796-.539l.716-2.41-1.314-1.213a.5.5 0 0 1 .288-.853l2.251-.21 1.096-2.133a.5.5 0 0 1 .896 0l1.1 2.133 2.25.21a.5.5 0 0 1 .289.853L11.5 8.324a.5.5 0 0 1-.131.428l-.069.057z"/>
+      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.394 13.115l.59-2.011a.5.5 0 0 1 .744-.326l1.344.757a.5.5 0 0 0 .546-.041l2.062-1.536a.5.5 0 0 1 .707.135l1.084 1.74a7 7 0 1 0-7.077 1.282z"/>
+    </svg>
+    <div>
+      <div style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
+        GameStack
       </div>
+    </div>
+    </div>
+  </div>
 
       <nav style={{ padding: '16px 12px', flex: 1 }}>
         <div style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em', padding: '0 10px', marginBottom: 8, textTransform: 'uppercase' }}>
