@@ -23,23 +23,21 @@ export function Btn({ children, variant = 'primary', size = 'md', onClick, disab
   }
   const sizes = { sm: { padding: '6px 14px', fontSize: 12 }, md: { padding: '10px 22px', fontSize: 13 }, lg: { padding: '13px 28px', fontSize: 14 } }
   const variants = {
-    primary: { background: 'var(--accent)', color: '#000', borderColor: 'var(--accent)', boxShadow: '0 0 18px rgba(0,229,255,0.25)' },
+    primary: { background: 'var(--accent)', color: '#fff', borderColor: 'var(--accent)'},
     ghost:   { background: 'transparent', color: 'var(--text-primary)', borderColor: 'var(--border)' },
     danger:  { background: 'transparent', color: 'var(--red)', borderColor: 'var(--red)' },
-    gold:    { background: 'var(--gold)', color: '#000', borderColor: 'var(--gold)' },
+    gold:    { background: 'var(--gold)', color: '#fff', borderColor: 'var(--gold)' },
   }
   return (
     <button type={type} onClick={onClick} disabled={disabled}
       style={{ ...base, ...sizes[size], ...variants[variant] }}
       onMouseEnter={e => {
         if (disabled) return
-        if (variant === 'primary') e.currentTarget.style.boxShadow = '0 0 30px rgba(0,229,255,0.4)'
         if (variant === 'ghost')   e.currentTarget.style.borderColor = 'var(--border-bright)'
         if (variant === 'danger')  { e.currentTarget.style.background = 'rgba(255,77,109,0.1)' }
       }}
       onMouseLeave={e => {
         if (disabled) return
-        if (variant === 'primary') e.currentTarget.style.boxShadow = '0 0 18px rgba(0,229,255,0.25)'
         if (variant === 'ghost')   e.currentTarget.style.borderColor = 'var(--border)'
         if (variant === 'danger')  e.currentTarget.style.background = 'transparent'
       }}
