@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';                
 
 export default function Login({}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { saveSession } = useAuth()
 
-  const CREDENTIALS = {
-    username: 'useradmin',
-    password: 'admin'
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
-      navigate('/dashboard'); 
-    } else {
-      setError('Usuário ou senha inválidos. Tente novamente.');
+    setLoading(true);
+    try {
+      const res = await axios.post('/api/v1/auth/login', { username, password });
+      saveSession(res.data.token, res.data.user);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Usuário ou senha inválidos.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -238,6 +241,7 @@ export default function Login({}) {
             <div style={styles.dGrid}>
               <button 
                 type="submit" 
+                disabled={loading}
                 style={styles.btnPrimary}
                 onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#1b2b22'}
                 onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#243e30'}

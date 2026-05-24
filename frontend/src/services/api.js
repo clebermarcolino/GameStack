@@ -5,9 +5,22 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('gv_token')
+  if (token) config.headers['Authorization'] = `Bearer ${token}`
+  return config
+})
+
 api.interceptors.response.use(
   res => res.data,
-  err => Promise.reject(err.response?.data || err)
+  err => {
+    if (err.response?.status === 401) {
+      localStorage.removeItem('gv_token')
+      localStorage.removeItem('gv_user')
+      window.location.href = '/login'
+    }
+    return Promise.reject(err.response?.data || err)
+  }
 )
 
 export const playersApi = {
@@ -29,13 +42,13 @@ export const gamesApi = {
 }
 
 export const rankingsApi = {
-  list:     (params)    => api.get('/rankings', { params }),
-  global:   (params)    => api.get('/rankings/global', { params }),
-  byGame:   (gId, p)   => api.get(`/rankings/game/${gId}`, { params: p }),
-  byPlayer: (pId, p)   => api.get(`/rankings/player/${pId}`, { params: p }),
-  create:   (data)      => api.post('/rankings', data),
-  update:   (id, d)     => api.put(`/rankings/${id}`, d),
-  delete:   (id)        => api.delete(`/rankings/${id}`),
+  list:     (params)  => api.get('/rankings', { params }),
+  global:   (params)  => api.get('/rankings/global', { params }),
+  byGame:   (gId, p)  => api.get(`/rankings/game/${gId}`, { params: p }),
+  byPlayer: (pId, p)  => api.get(`/rankings/player/${pId}`, { params: p }),
+  create:   (data)    => api.post('/rankings', data),
+  update:   (id, d)   => api.put(`/rankings/${id}`, d),
+  delete:   (id)      => api.delete(`/rankings/${id}`),
 }
 
 export default api

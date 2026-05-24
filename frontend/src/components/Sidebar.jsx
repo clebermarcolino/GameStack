@@ -1,4 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
 
 const links = [
   { to: '/dashboard', icon: '⊞', label: 'Dashboard'  },
@@ -8,10 +10,13 @@ const links = [
 ]
 
 export default function Sidebar() {
-  const navigate = useNavigate() 
+  const navigate = useNavigate()
+  const { logout } = useAuth() 
+
 
   const handleLogout = () => {
-    navigate('/')
+    logout()   
+    navigate('/login')
   }
 
   return (
