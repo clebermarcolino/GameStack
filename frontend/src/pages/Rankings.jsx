@@ -160,14 +160,18 @@ export default function Rankings() {
                   }
                 </div>
                 <div style={{
-                  width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
-                  background: `hsl(${(p.player_id * 47) % 360}, 60%, 20%)`,
-                  border: `2px solid ${medal ? medal.color : 'var(--border)'}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 700, fontSize: 16, color: `hsl(${(p.player_id * 47) % 360}, 80%, 70%)`,
-                }}>
-                  {p.player_name.charAt(0).toUpperCase()}
-                </div>
+                width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
+                border: `2px solid ${medal ? medal.color : 'var(--border)'}`,
+                overflow: 'hidden',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'var(--accent-light)',
+                fontWeight: 700, fontSize: 16, color: 'var(--accent)',
+              }}>
+                {p.avatar_url
+                  ? <img src={p.avatar_url} alt={p.player_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  : p.player_name.charAt(0).toUpperCase()
+                }
+              </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 }}>{p.player_name}</div>
                   <div style={{ fontSize: 12, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>

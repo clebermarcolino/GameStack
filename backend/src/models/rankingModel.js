@@ -52,7 +52,7 @@ const RankingModel = {
 
   async findAll({ limit = 20, offset = 0 } = {}) {
     const result = await query(`
-      SELECT r.*, p.name AS player_name, p.username, g.title AS game_title
+      SELECT r.*, p.name AS player_name, p.username, p.avatar_url, g.title AS game_title
       FROM rankings r
       JOIN players p ON p.id = r.player_id
       JOIN games   g ON g.id = r.game_id
