@@ -14,8 +14,8 @@ function RankingForm({ onSubmit, onClose, loading }) {
     gamesApi.list({ limit: 100 }).then(r => setGames(r.data))
   }, [])
 
-  const playerOpts = [{ value: '', label: 'Selecione o jogador' }, ...players.map(p => ({ value: p.id, label: `#${p.id} — ${p.name} (@${p.username})` }))]
-  const gameOpts   = [{ value: '', label: 'Selecione o jogo' },   ...games.map(g => ({ value: g.id, label: `#${g.id} — ${g.title}` }))]
+  const playerOpts = [{ value: '', label: 'Selecione o jogador' }, ...players.map(p => ({ value: p.id, label: `${p.name} (@${p.username})` }))]
+  const gameOpts   = [{ value: '', label: 'Selecione o jogo' },   ...games.map(g => ({ value: g.id, label: `${g.title}` }))]
 
   return (
     <form onSubmit={e => { e.preventDefault(); onSubmit({ ...form, player_id: Number(form.player_id), game_id: Number(form.game_id), score: Number(form.score), level: Number(form.level) }) }}>
@@ -132,7 +132,7 @@ export default function Rankings() {
           </p>
         </div>
         <Btn style={{ background: 'var(--green)', color: '#000', borderColor: 'var(--green)' }} onClick={() => setModal(true)}>
-          ◆ Nova Pontuação
+          Nova Pontuação
         </Btn>
       </div>
 
@@ -144,7 +144,6 @@ export default function Rankings() {
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 60 }}><Spinner /></div>
       ) : tab === 'global' ? (
-        /* ── GLOBAL RANKING ── */
         <div style={{ display: 'grid', gap: 12 }}>
           {global.length === 0 ? <Empty icon="◆" message="Nenhuma pontuação ainda" /> : global.map((p, i) => {
             const medal = medals[i]
@@ -154,11 +153,10 @@ export default function Rankings() {
                 borderColor: i === 0 ? 'rgba(245,197,66,0.3)' : 'var(--border)',
                 background: i === 0 ? 'linear-gradient(90deg, rgba(245,197,66,0.05) 0%, var(--bg-card) 100%)' : 'var(--bg-card)',
               }}>
-                {/* Position */}
                 <div style={{ width: 40, textAlign: 'center', flexShrink: 0 }}>
                   {medal
                     ? <span style={{ fontSize: 24 }}>{medal.emoji}</span>
-                    : <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--text-muted)', fontSize: 15 }}>#{i + 1}</span>
+                    : <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--text-muted)', fontSize: 15 }}>{i + 1}</span>
                   }
                 </div>
                 <div style={{
@@ -192,7 +190,7 @@ export default function Rankings() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  {['ID', 'Jogador', 'Jogo', 'Pontuação', 'Nível', 'Data', 'Ações'].map(h => (
+                  {['Jogador', 'Jogo', 'Pontuação', 'Nível', 'Data'].map(h => (
                     <th key={h} style={{ padding: '14px 20px', textAlign: 'left', fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.1em' }}>{h}</th>
                   ))}
                 </tr>
@@ -203,7 +201,6 @@ export default function Rankings() {
                     onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                   >
-                    <td style={{ padding: '13px 20px' }}><span style={{ fontFamily: 'var(--font-mono)', color: 'var(--green)', fontSize: 13 }}>#{r.id}</span></td>
                     <td style={{ padding: '13px 20px', fontWeight: 600, fontSize: 14 }}>{r.player_name}</td>
                     <td style={{ padding: '13px 20px' }}><Badge color="muted">{r.game_title}</Badge></td>
                     <td style={{ padding: '13px 20px', fontFamily: 'var(--font-mono)', color: 'var(--gold)', fontWeight: 700 }}>{Number(r.score).toLocaleString()}</td>
@@ -214,7 +211,7 @@ export default function Rankings() {
                     <td style={{ padding: '13px 20px' }}>
                       <div style={{ display: 'flex', gap: 8 }}>
                         <Btn size="sm" variant="ghost" onClick={() => setEditModal(r)}>Editar</Btn>
-                        <Btn size="sm" variant="danger" onClick={() => setConfirm(r)}>✕</Btn>
+                        <Btn size="sm" variant="danger" onClick={() => setConfirm(r)}>Excluir</Btn>
                       </div>
                     </td>
                   </tr>
