@@ -17,21 +17,20 @@ export function NotifProvider({ children }) {
       <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 9999, display: 'flex', flexDirection: 'column', gap: 10 }}>
         {notifs.map(n => (
           <div key={n.id} style={{
-            background: n.type === 'error' ? '#1a0a10' : '#0a1a14',
-            border: `1px solid ${n.type === 'error' ? 'var(--red)' : 'var(--green)'}`,
-            color: n.type === 'error' ? 'var(--red)' : 'var(--green)',
+            background: '#ffffff',
+            border: `1px solid ${n.type === 'error' ? 'var(--red)' : 'var(--accent)'}`,
+            borderLeft: `4px solid ${n.type === 'error' ? 'var(--red)' : 'var(--accent)'}`,
+            color: n.type === 'error' ? 'var(--red)' : 'var(--accent)',
             padding: '12px 18px',
             borderRadius: 'var(--radius-md)',
             fontFamily: 'var(--font-mono)',
             fontSize: 13,
             animation: 'fadeIn 0.3s ease',
-            boxShadow: n.type === 'error'
-              ? '0 4px 20px rgba(255,77,109,0.2)'
-              : '0 4px 20px rgba(0,229,160,0.2)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
             maxWidth: 320,
           }}>
-            {n.type === 'error' ? '✗ ' : '✓ '}{n.msg}
-          </div>
+            {n.msg}
+        </div>
         ))}
       </div>
     </NotifContext.Provider>

@@ -60,14 +60,14 @@ const PlayerModel = {
         name       = COALESCE($1, name),
         email      = COALESCE($2, email),
         username   = COALESCE($3, username),
-        avatar_url = COALESCE($4, avatar_url),
+        avatar_url = $4,        -- ← sem COALESCE, aceita null/vazio
         bio        = COALESCE($5, bio),
         updated_at = NOW()
-       WHERE id = $6
-       RETURNING *`,
-      [name || null, email || null, username || null, avatar_url || null, bio || null, id]
-    );
-    return result.rows[0];
+      WHERE id = $6
+      RETURNING *`,
+    [name || null, email || null, username || null, avatar_url || null, bio || null, id]
+  )
+    return result.rows[0]
   },
 
   async delete(id) {
