@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 export function Spinner({ size = 24 }) {
   return (
     <div style={{

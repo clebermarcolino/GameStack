@@ -12,6 +12,18 @@ function GameForm({ initial = {}, onSubmit, onClose, loading }) {
   const [form, setForm] = useState({ title: '', genre: '', description: '', developer: '', release_year: '', platform: '', cover_url: '', ...initial })
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }))
 
+  function handleCover(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Imagem muito grande! Máximo 2MB.')
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => setForm(p => ({ ...p, cover_url: reader.result }))
+    reader.readAsDataURL(file)
+  }
+
   const genreOptions = GENRES.map(g => ({ value: g, label: g || 'Selecione o gênero' }))
   const platformOptions = PLATFORMS.map(p => ({ value: p, label: p || 'Selecione a plataforma' }))
 
@@ -19,22 +31,64 @@ function GameForm({ initial = {}, onSubmit, onClose, loading }) {
     <form onSubmit={e => { e.preventDefault(); onSubmit(form) }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         <div style={{ gridColumn: '1 / -1' }}>
-          <Input label="Título *" value={form.title} onChange={set('title')} placeholder="Ex: Elden Ring" required />
+          <Input label="Título *" value={form.title} onChange={set('title')} placeholder="Adicione o título" required />
         </div>
-        <Select label="Gênero *"    value={form.genre}    onChange={set('genre')}    options={genreOptions} required />
-        <Select label="Plataforma"  value={form.platform} onChange={set('platform')} options={platformOptions} />
-        <Input  label="Desenvolvedor" value={form.developer}    onChange={set('developer')}    placeholder="FromSoftware" />
-        <Input  label="Ano"           value={form.release_year} onChange={set('release_year')} type="number" placeholder="2024" />
+        <Select label="Gênero *"   value={form.genre}    onChange={set('genre')}    options={genreOptions} required />
+        <Select label="Plataforma" value={form.platform} onChange={set('platform')} options={platformOptions} />
+        <Input label="Desenvolvedor" value={form.developer}    onChange={set('developer')}    placeholder="Adicione o desenvolvedor" />
+        <Input label="Ano"           value={form.release_year} onChange={set('release_year')} type="number" placeholder="Adicione o ano" />
         <div style={{ gridColumn: '1 / -1' }}>
           <Input label="Descrição" value={form.description} onChange={set('description')} placeholder="Breve descrição do jogo..." />
         </div>
-        <div style={{ gridColumn: '1 / -1' }}>
-          <Input label="URL da Capa" value={form.cover_url} onChange={set('cover_url')} placeholder="https://..." />
+
+        <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-display)' }}>
+            Capa do Jogo
+          </label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{
+              width: 80, height: 64, borderRadius: 8, flexShrink: 0,
+              background: form.cover_url ? 'transparent' : 'var(--accent-light)',
+              border: '2px solid var(--border)', overflow: 'hidden',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'var(--accent)', fontSize: 22,
+            }}>
+              {form.cover_url
+                ? <img src={form.cover_url} alt="capa" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : '◉'
+              }
+            </div>
+            <div style={{ flex: 1 }}>
+              <label htmlFor="cover-upload" style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '8px 16px', borderRadius: 'var(--radius-sm)',
+                background: 'var(--bg-base)', border: '1px solid var(--border)',
+                fontSize: 13, fontWeight: 500, cursor: 'pointer',
+                color: 'var(--text-secondary)', transition: 'border-color 0.15s',
+              }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+              >
+                {'\u{1F4C1}'} Escolher imagem
+              </label>
+              <input id="cover-upload" type="file" accept="image/*" onChange={handleCover} style={{ display: 'none' }} />
+              {form.cover_url && (
+                <button type="button" onClick={() => setForm(p => ({ ...p, cover_url: '' }))}
+                  style={{ marginLeft: 8, fontSize: 12, color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  Remover
+                </button>
+              )}
+              <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4, fontFamily: 'var(--font-mono)' }}>
+                Adicione uma imagem
+              </p>
+            </div>
+          </div>
         </div>
       </div>
+
       <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 24 }}>
         <Btn variant="ghost" onClick={onClose}>Cancelar</Btn>
-        <Btn type="submit" variant="gold" disabled={loading}>{loading ? <Spinner size={14} /> : (initial.id ? 'Salvar' : 'Criar Jogo')}</Btn>
+        <Btn type="submit" disabled={loading}>{loading ? <Spinner size={14} /> : (initial.id ? 'Salvar' : 'Criar Jogo')}</Btn>
       </div>
     </form>
   )
@@ -99,12 +153,12 @@ export default function Games() {
             {pagination.total ?? '...'} jogos cadastrados
           </p>
         </div>
-        <Btn variant="gold" onClick={() => setModal('create')}>◉ Novo Jogo</Btn>
+        <Btn variant="gold" onClick={() => setModal('create')}>Novo Jogo</Btn>
       </div>
 
       <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
         <div style={{ flex: 1, maxWidth: 320 }}>
-          <SearchBar value={search} onChange={setSearch} placeholder="Buscar por título, desenvolvedor..." />
+          <SearchBar value={search} onChange={setSearch} placeholder="Buscar por título" />
         </div>
         <select value={genreFilter} onChange={e => setGenreFilter(e.target.value)} style={{
           background: 'var(--bg-surface)', border: '1px solid var(--border)',
@@ -140,9 +194,6 @@ export default function Games() {
                 <div style={{ position: 'absolute', top: 10, left: 10 }}>
                   <Badge color={GENRE_COLORS[g.genre] || 'muted'}>{g.genre}</Badge>
                 </div>
-                <div style={{ position: 'absolute', top: 10, right: 10, fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
-                  #{g.id}
-                </div>
               </div>
               <div style={{ padding: 16 }}>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, marginBottom: 4 }} className="truncate">
@@ -156,7 +207,7 @@ export default function Games() {
                 )}
                 <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
                   <Btn size="sm" variant="ghost" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setModal(g)}>Editar</Btn>
-                  <Btn size="sm" variant="danger" onClick={() => setConfirm(g)}>✕</Btn>
+                  <Btn size="sm" variant="danger" onClick={() => setConfirm(g)}>Excluir</Btn>
                 </div>
               </div>
             </div>
@@ -182,7 +233,13 @@ export default function Games() {
         <GameForm onSubmit={handleCreate} onClose={() => setModal(null)} loading={saving} />
       </Modal>
       <Modal open={!!modal && modal !== 'create'} onClose={() => setModal(null)} title="Editar Jogo">
-        <GameForm initial={modal || {}} onSubmit={handleUpdate} onClose={() => setModal(null)} loading={saving} />
+      <GameForm 
+        key={modal?.id}
+        initial={modal || {}} 
+        onSubmit={handleUpdate} 
+        onClose={() => setModal(null)} 
+        loading={saving} 
+      />
       </Modal>
       <Confirm
         open={!!confirm} onClose={() => setConfirm(null)} onConfirm={handleDelete}
